@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savol-javob</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container welcome-container">
+        <h1 id="welcome-title">Добро пожаловать в викторину!</h1>
+        <p id="welcome-message">Выберите действие:</p>
+
+        <div class="buttons">
+            <button id="start-button" onclick="startGame()">Начать</button>
+            <button id="continue-button">Продолжить</button>
+            <button id="records-button">Рекорды</button>
+        </div>
+
+        <div class="language-selector">
+            <label for="language-select" id="language-label">Выберите язык:</label>
+            <select id="language-select" onchange="changeLanguage()">
+                <option value="ru">Русский</option>
+                <option value="uz">O'zbekcha</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container mode-selection">
+        <h2 id="mode-title">Выберите режим игры:</h2>
+        <button id="timed-mode" onclick="selectMode('timer')">С таймером</button>
+        <button id="no-timer-mode" onclick="selectMode('no-timer')">Без таймера</button>
+    </div>
+
+    <div class="container subject-container">
+        <h2 id="select-subject-title">Выберите предмет:</h2>
+        <button onclick="startSubject('history')">История</button>
+        <button onclick="startSubject('informatics')">Информатика</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
