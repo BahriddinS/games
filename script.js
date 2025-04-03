@@ -9,7 +9,10 @@ const texts = {
         languageLabel: "Выберите язык:",
         selectMode: "Выберите режим игры:",
         timedMode: "С таймером",
-        noTimerMode: "Без таймера"
+        noTimerMode: "Без таймера",
+        selectSubject: "Выберите предмет:",
+        history: "История",
+        informatics: "Информатика"
     },
     uz: {
         welcomeTitle: "Viktorina sayohatiga xush kelibsiz!",
@@ -20,7 +23,10 @@ const texts = {
         languageLabel: "Tilni tanlang:",
         selectMode: "Oʻyin rejimini tanlang:",
         timedMode: "Taymer bilan",
-        noTimerMode: "Taymersiz"
+        noTimerMode: "Taymersiz",
+        selectSubject: "Fan tanlang:",
+        history: "Tarix",
+        informatics: "Informatika"
     },
     en: {
         welcomeTitle: "Welcome to the quiz!",
@@ -31,7 +37,10 @@ const texts = {
         languageLabel: "Choose a language:",
         selectMode: "Choose game mode:",
         timedMode: "With timer",
-        noTimerMode: "No timer"
+        noTimerMode: "No timer",
+        selectSubject: "Choose a subject:",
+        history: "History",
+        informatics: "Informatics"
     }
 };
 
@@ -41,6 +50,7 @@ let currentLanguage = "ru";
 function changeLanguage() {
     currentLanguage = document.getElementById("language-select").value;
 
+    // Обновляем текст на главном экране
     document.getElementById("welcome-title").textContent = texts[currentLanguage].welcomeTitle;
     document.getElementById("welcome-message").textContent = texts[currentLanguage].welcomeMessage;
     document.getElementById("start-button").textContent = texts[currentLanguage].startButton;
@@ -48,9 +58,15 @@ function changeLanguage() {
     document.getElementById("records-button").textContent = texts[currentLanguage].recordsButton;
     document.getElementById("language-label").textContent = texts[currentLanguage].languageLabel;
 
+    // Обновляем текст выбора режима
     document.getElementById("mode-title").textContent = texts[currentLanguage].selectMode;
     document.getElementById("timed-mode").textContent = texts[currentLanguage].timedMode;
     document.getElementById("no-timer-mode").textContent = texts[currentLanguage].noTimerMode;
+
+    // Обновляем текст выбора предмета
+    document.getElementById("select-subject-title").textContent = texts[currentLanguage].selectSubject;
+    document.getElementById("history-button").textContent = texts[currentLanguage].history;
+    document.getElementById("informatics-button").textContent = texts[currentLanguage].informatics;
 }
 
 // Функция для начала игры (переход к выбору режима)
@@ -69,4 +85,5 @@ function selectMode(mode) {
 // Функция для выбора предмета
 function startSubject(subject) {
     console.log("Выбран предмет: ", subject);
+    document.querySelector(".subject-container").style.display = "none";
 }
