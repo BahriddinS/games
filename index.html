@@ -28,16 +28,16 @@
         </div>
     </div>
 
-    <div class="container mode-selection">
+    <div class="container mode-selection" style="display: none;">
         <h2 id="mode-title">Выберите режим игры:</h2>
         <button id="timed-mode" onclick="selectMode('timer')">С таймером</button>
         <button id="no-timer-mode" onclick="selectMode('no-timer')">Без таймера</button>
     </div>
 
-    <div class="container subject-container">
+    <div class="container subject-container" style="display: none;">
         <h2 id="select-subject-title">Выберите предмет:</h2>
-        <button onclick="startSubject('history')">История</button>
-        <button onclick="startSubject('informatics')">Информатика</button>
+        <button id="history-button" onclick="startSubject('history')">История</button>
+        <button id="informatics-button" onclick="startSubject('informatics')">Информатика</button>
     </div>
 
     <script src="script.js"></script>
