@@ -77,6 +77,27 @@ button:active {
     display: none;
 }
 
+/* Стиль для правильных и неправильных ответов */
+.correct {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    width: auto;
+}
+
+.incorrect {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    width: auto;
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 600px) {
     .container {
@@ -87,5 +108,9 @@ button:active {
     button {
         padding: 12px;
         font-size: 0.9rem;
+    }
+
+    .correct, .incorrect {
+        font-size: 1rem;
     }
 }
