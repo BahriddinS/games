@@ -12,7 +12,9 @@ const texts = {
         noTimerMode: "Без таймера",
         selectSubject: "Выберите предмет:",
         history: "История",
-        informatics: "Информатика"
+        informatics: "Информатика",
+        correctAnswer: "Правильный ответ!",
+        incorrectAnswer: "Неправильный ответ!"
     },
     uz: {
         welcomeTitle: "Viktorina sayohatiga xush kelibsiz!",
@@ -26,7 +28,9 @@ const texts = {
         noTimerMode: "Taymersiz",
         selectSubject: "Fan tanlang:",
         history: "Tarix",
-        informatics: "Informatika"
+        informatics: "Informatika",
+        correctAnswer: "To'g'ri javob!",
+        incorrectAnswer: "Noto'g'ri javob!"
     },
     en: {
         welcomeTitle: "Welcome to the quiz!",
@@ -40,7 +44,9 @@ const texts = {
         noTimerMode: "No timer",
         selectSubject: "Choose a subject:",
         history: "History",
-        informatics: "Informatics"
+        informatics: "Informatics",
+        correctAnswer: "Correct answer!",
+        incorrectAnswer: "Incorrect answer!"
     }
 };
 
@@ -84,6 +90,59 @@ function selectMode(mode) {
 
 // Функция для выбора предмета
 function startSubject(subject) {
+    // Предположим, что объект `questions` уже определен в файле questions.js.
+    const selectedQuestions = questions[subject];
+
     console.log("Выбран предмет: ", subject);
+    console.log("Вопросы для выбранного предмета:", selectedQuestions);
+
+    // Переключаем на экран вопросов
     document.querySelector(".subject-container").style.display = "none";
+    document.querySelector(".question-container").style.display = "block";
+
+    // Показать первый вопрос
+    displayQuestion(selectedQuestions, 0);
+}
+
+// Функция для отображения вопроса
+function displayQuestion(questionsArray, index) {
+    if (index < questionsArray.length) {
+        const question = questionsArray[index];
+        const questionElement = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("question-options");
+
+        questionElement.textContent = question.text[currentLanguage];
+        optionsContainer.innerHTML = ""; // Очищаем старые варианты ответов
+
+        question.options.forEach(option => {
+            const optionButton = document.createElement("button");
+            optionButton.textContent = option.text[currentLanguage];
+            optionButton.onclick = () => checkAnswer(option, questionsArray, index);
+            optionsContainer.appendChild(optionButton);
+        });
+    } else {
+        document.getElementById("question-container").innerHTML = "<p>Все вопросы завершены!</p>";
+    }
+}
+
+// Функция для проверки ответа
+function checkAnswer(selectedOption, questionsArray, currentIndex) {
+    const resultMessage = selectedOption.correct ? texts[currentLanguage].correctAnswer : texts[currentLanguage].incorrectAnswer;
+
+    // Создаем элемент для результата
+    const resultElement = document.createElement("div");
+    resultElement.classList.add(selectedOption.correct ? 'correct' : 'incorrect');
+    resultElement.textContent = resultMessage;
+
+    // Добавляем результат в DOM
+    document.body.appendChild(resultElement);
+
+    // Убираем результат через 1.5 секунды
+    setTimeout(() => {
+        resultElement.remove();
+    }, 1500);
+
+    // Переходим к следующему вопросу
+    const nextIndex = currentIndex + 1;
+    displayQuestion(questionsArray, nextIndex);
 }
