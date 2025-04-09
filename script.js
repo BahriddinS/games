@@ -51,6 +51,10 @@ const texts = {
 };
 
 let currentLanguage = "ru";
+let timerInterval = null;
+let timeLeft = 600; // 10 минут
+let gameMode = "no-timer"; // по умолчанию
+
 
 // Функция для изменения языка
 function changeLanguage() {
@@ -83,15 +87,57 @@ function startGame() {
 
 // Функция для выбора режима и перехода к выбору предмета
 function selectMode(mode) {
+    gameMode = mode;
     document.querySelector(".mode-selection").style.display = "none";
     document.querySelector(".subject-container").style.display = "block";
     console.log("Выбран режим: ", mode);
 }
 
+function loadSubjectQuestions(subject, callback) {
+    const script = document.createElement("script");
+    script.src = `${subject}.js`; // например: "history.js"
+    script.onload = () => {
+        let selectedQuestions;
+        if (subject === "history") {
+            selectedQuestions = historyQuestions;
+        } else if (subject === "informatics") {
+            selectedQuestions = informaticsQuestions;
+        }
+        callback(selectedQuestions);
+    };
+    document.body.appendChild(script);
+}
+
 // Функция для выбора предмета
 function startSubject(subject) {
     // Предположим, что объект `questions` уже определен в файле questions.js.
-    const selectedQuestions = questions[subject];
+    loadSubjectQuestions(subject, (selectedQuestions) => {
+        console.log("Выбран предмет: ", subject);
+        console.log("Вопросы для выбранного предмета:", selectedQuestions);
+    
+        document.querySelector(".subject-container").style.display = "none";
+        document.querySelector(".question-container").style.display = "block";
+    
+        if (gameMode === "timer") {
+            timeLeft = 600;
+            const timerDisplay = document.getElementById("timer");
+            timerDisplay.style.display = "block";
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGameDueToTimeout();
+                }
+            }, 1000);
+        } else {
+            document.getElementById("timer").style.display = "none";
+        }
+    
+        displayQuestion(selectedQuestions, 0);
+    });
+    
 
     console.log("Выбран предмет: ", subject);
     console.log("Вопросы для выбранного предмета:", selectedQuestions);
@@ -99,6 +145,24 @@ function startSubject(subject) {
     // Переключаем на экран вопросов
     document.querySelector(".subject-container").style.display = "none";
     document.querySelector(".question-container").style.display = "block";
+
+    // Показываем таймер, если выбран режим с таймером
+if (gameMode === "timer") {
+    timeLeft = 600;
+    const timerDisplay = document.getElementById("timer");
+    timerDisplay.style.display = "block";
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            endGameDueToTimeout();
+        }
+    }, 1000);
+} else {
+    document.getElementById("timer").style.display = "none";
+}
 
     // Показать первый вопрос
     displayQuestion(selectedQuestions, 0);
@@ -127,22 +191,55 @@ function displayQuestion(questionsArray, index) {
 
 // Функция для проверки ответа
 function checkAnswer(selectedOption, questionsArray, currentIndex) {
-    const resultMessage = selectedOption.correct ? texts[currentLanguage].correctAnswer : texts[currentLanguage].incorrectAnswer;
+    const buttons = document.querySelectorAll("#question-options button");
 
-    // Создаем элемент для результата
-    const resultElement = document.createElement("div");
-    resultElement.classList.add(selectedOption.correct ? 'correct' : 'incorrect');
-    resultElement.textContent = resultMessage;
+    buttons.forEach(btn => {
+        btn.disabled = true; // отключаем все кнопки
+        const isCorrect = questionsArray[currentIndex].options.find(opt => opt.text[currentLanguage] === btn.textContent)?.correct;
 
-    // Добавляем результат в DOM
-    document.body.appendChild(resultElement);
+        if (isCorrect) {
+            btn.classList.add("highlight-correct");
+        }
 
-    // Убираем результат через 1.5 секунды
+        if (btn.textContent === selectedOption.text[currentLanguage] && !selectedOption.correct) {
+            btn.classList.add("highlight-wrong");
+        }
+    });
+
+    // Переход к следующему вопросу через 1.5 сек
     setTimeout(() => {
-        resultElement.remove();
+        const nextIndex = currentIndex + 1;
+        displayQuestion(questionsArray, nextIndex);
     }, 1500);
+}
 
-    // Переходим к следующему вопросу
-    const nextIndex = currentIndex + 1;
-    displayQuestion(questionsArray, nextIndex);
+
+//Функция для обновление таймердисплея
+function updateTimerDisplay() {
+    const timerDisplay = document.getElementById("timer");
+    const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const seconds = (timeLeft % 60).toString().padStart(2, '0');
+    timerDisplay.textContent = `${minutes}:${seconds}`;
+
+    if (timeLeft <= 60) {
+        timerDisplay.classList.add("warning");
+    } else {
+        timerDisplay.classList.remove("warning");
+    }
+}
+
+function endGameDueToTimeout() {
+    const container = document.querySelector(".question-container");
+    const message = document.createElement("p");
+    message.style.color = "#b80000";
+    message.style.fontWeight = "bold";
+    message.textContent = {
+        ru: "Время вышло!",
+        uz: "Vaqt tugadi!",
+        en: "Time is up!"
+    }[currentLanguage];
+
+    container.innerHTML = "";
+    container.appendChild(message);
+    document.getElementById("timer").style.display = "none";
 }
