@@ -39,7 +39,7 @@ p {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #4c98af;
     color: white;
     border: none;
     padding: 15px;
@@ -52,7 +52,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #4583a0;
     transform: scale(1.05);
 }
 
@@ -113,4 +113,35 @@ button:active {
     .correct, .incorrect {
         font-size: 1rem;
     }
+}
+
+.timer {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #ffffffdd;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    transition: color 0.5s, background-color 0.5s;
+    z-index: 10;
+}
+
+.timer.warning {
+    color: #b80000;
+    background-color: #ffdddd;
+}
+
+/* Подсветка выбранного ответа */
+.highlight-correct {
+    background-color: #4CAF50 !important;
+    color: white;
+}
+
+.highlight-wrong {
+    background-color: #f44336 !important;
+    color: white;
 }
