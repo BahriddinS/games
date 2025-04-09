@@ -7,7 +7,7 @@ const historyQuestions = [
             },
             options: [
                 { text: { ru: "Джордж Вашингтон", en: "George Washington", uz: "Jorj Vashington" }, correct: true },
-                { text: { ru: "Авраам Линкольн", en: "Avram Linkoln", uz: "Abraham Lincoln" }, correct: false },
+                { text: { ru: "Авраам Линкольн", en: "Abraham Lincoln", uz: "Avram Linkoln" }, correct: false },
                 { text: { ru: "Томас Джефферсон", en: "Thomas Jefferson", uz: "Tomas Jefferson" }, correct: false }
             ]
         },
