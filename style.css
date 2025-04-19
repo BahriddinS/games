@@ -168,3 +168,12 @@ button:active {
         width: fit-content;
     }
 }
+
+@media screen and (max-width: 480px) {
+    .analysisContainer {
+        font-size: 14px;
+    }
+    button {
+        width: 90%;
+    }
+}
