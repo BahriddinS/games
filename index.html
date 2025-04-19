@@ -6,6 +6,7 @@
     <title>Savol-javob</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="icon.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -14,14 +15,14 @@
         <p id="welcome-message">Выберите действие:</p>
 
         <div class="buttons">
-            <button id="start-button" onclick="startGame()">Начать</button>
+            <button id="start-button">Начать</button>
             <button id="continue-button">Продолжить</button>
             <button id="records-button">Рекорды</button>
         </div>
 
         <div class="language-selector">
             <label for="language-select" id="language-label">Выберите язык:</label>
-            <select id="language-select" onchange="changeLanguage()">
+            <select id="language-select">
                 <option value="ru">Русский</option>
                 <option value="uz">O'zbekcha</option>
                 <option value="en">English</option>
@@ -29,29 +30,42 @@
         </div>
     </div>
 
-    <div class="container mode-selection" style="display: none;">
+    <div class="container mode-selection">
         <h2 id="mode-title">Выберите режим игры:</h2>
-        <button id="timed-mode" onclick="selectMode('timer')">С таймером</button>
-        <button id="no-timer-mode" onclick="selectMode('no-timer')">Без таймера</button>
+        <button id="timed-mode">С таймером</button>
+        <button id="no-timer-mode">Без таймера</button>
     </div>
 
-    <div class="container subject-container" style="display: none;">
+    <div class="container subject-container">
         <h2 id="select-subject-title">Выберите предмет:</h2>
-        <button id="history-button" onclick="startSubject('history')">История</button>
-        <button id="informatics-button" onclick="startSubject('informatics')">Информатика</button>
-        <button id="chemistry-button" onclick="startSubject('chemistry')">Химия</button>
+        <button id="history-button">История</button>
+        <button id="informatics-button">Информатика</button>
+        <button id="chemistry-button">Химия</button>
     </div>
 
-    <!-- Новый контейнер для вопросов -->
-    <div class="container question-container" style="display: none;">
-    <div id="timer" class="timer" style="display: none;">10:00</div>
+    <div class="container question-container">
+        <div id="timer" class="timer">10:00</div>
         <h2 id="question-text">Здесь будет вопрос</h2>
         <div id="question-options"></div>
+    </div>
+
+    <div class="container results-container">
+        <h2 id="results-title">Результаты</h2>
+        <div id="results-stats"></div>
+        <button id="analysis-btn">Анализ ответов</button>
+        <button id="return-main-btn">На главную</button>
+    </div>
+
+    <div class="container analysis-container">
+        <h2 id="analysis-title">Анализ ответов</h2>
+        <div id="analysis-content" class="scrollable-content"></div>
+        <button id="back-to-results-btn">Назад к результатам</button>
+        <button id="export-pdf-btn">Экспорт в PDF</button>
+        <button id="main-menu-btn">На главную</button>
     </div>
 
     <script src="history.js"></script>
     <script src="informatics.js"></script>
     <script src="chemistry.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>
