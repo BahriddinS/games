@@ -321,17 +321,35 @@ function showAnalysis() {
         const div = document.createElement("div");
         div.className = "question-analysis";
 
+        // Заголовок вопроса
         div.innerHTML = `
             <p><strong>${index + 1}. ${question.text[currentLanguage]}</strong></p>
             <p class="${isCorrect ? 'correct-answer' : 'user-wrong-answer'}">
                 ${isCorrect ? '✓' : '✗'} ${answer.selected.text[currentLanguage]}
                 ${!isCorrect ? `(${texts[currentLanguage].yourChoice})` : ''}
             </p>
-            ${!isCorrect ? `
-                <p class="correct-answer">✓ ${question.options.find(opt => opt.correct).text[currentLanguage]}</p>
-            ` : ''}
         `;
 
+        // Убираем повторяющиеся варианты ответа
+        const uniqueOptions = question.options.reduce((acc, option) => {
+            if (!acc.some(item => item.text[currentLanguage] === option.text[currentLanguage])) {
+                acc.push(option);
+            }
+            return acc;
+        }, []);
+
+        // Добавляем все уникальные варианты ответа
+        const optionsDiv = document.createElement("div");
+        optionsDiv.className = "all-options";
+
+        uniqueOptions.forEach((option) => {
+            const optionP = document.createElement("p");
+            optionP.className = option.correct ? "correct-answer" : "possible-answer";
+            optionP.innerText = `${option.correct ? "✓" : ""} ${option.text[currentLanguage]}`;
+            optionsDiv.appendChild(optionP);
+        });
+
+        div.appendChild(optionsDiv);
         elements.analysisContent.appendChild(div);
     });
 }
