@@ -1,3 +1,4 @@
+// Объект с текстами на разных языках
 const texts = {
     ru: {
         welcomeTitle: "Добро пожаловать в викторину!",
@@ -13,18 +14,8 @@ const texts = {
         history: "История",
         informatics: "Информатика",
         chemistry: "Химия",
-        correctAnswer: "Правильных ответов:",
-        incorrectAnswer: "Неправильных ответов:",
-        analysisButton: "Анализ ответов",
-        analysisTitle: "Анализ ответов",
-        resultsTitle: "Результаты",
-        totalQuestions: "Всего вопросов:",
-        correctPercentage: "Процент правильных:",
-        yourChoice: "Ваш выбор",
-        timeIsUp: "Время вышло!",
-        exportPDF: "Экспорт в PDF",
-        backToResults: "Назад к результатам",
-        mainMenu: "На главную"
+        correctAnswer: "Правильный ответ!",
+        incorrectAnswer: "Неправильный ответ!"
     },
     uz: {
         welcomeTitle: "Viktorina sayohatiga xush kelibsiz!",
@@ -40,18 +31,8 @@ const texts = {
         history: "Tarix",
         informatics: "Informatika",
         chemistry: "Kimyo",
-        correctAnswer: "To'g'ri javoblar:",
-        incorrectAnswer: "Noto'g'ri javoblar:",
-        analysisButton: "Javoblar tahlili",
-        analysisTitle: "Javoblar tahlili",
-        resultsTitle: "Natijalar",
-        totalQuestions: "Jami savollar:",
-        correctPercentage: "To'g'ri javoblar foizi:",
-        yourChoice: "Siz tanlagan",
-        timeIsUp: "Vaqt tugadi!",
-        exportPDF: "PDF ga eksport",
-        backToResults: "Natijalarga qaytish",
-        mainMenu: "Asosiy menyu"
+        correctAnswer: "To'g'ri javob!",
+        incorrectAnswer: "Noto'g'ri javob!"
     },
     en: {
         welcomeTitle: "Welcome to the quiz!",
@@ -59,78 +40,28 @@ const texts = {
         startButton: "Start",
         continueButton: "Continue",
         recordsButton: "Records",
-        languageLabel: "Choose language:",
+        languageLabel: "Choose a language:",
         selectMode: "Choose game mode:",
         timedMode: "With timer",
         noTimerMode: "No timer",
-        selectSubject: "Choose subject:",
+        selectSubject: "Choose a subject:",
         history: "History",
         informatics: "Informatics",
         chemistry: "Chemistry",
-        correctAnswer: "Correct answers:",
-        incorrectAnswer: "Incorrect answers:",
-        analysisButton: "Answer analysis",
-        analysisTitle: "Answer analysis",
-        resultsTitle: "Results",
-        totalQuestions: "Total questions:",
-        correctPercentage: "Correct percentage:",
-        yourChoice: "Your choice",
-        timeIsUp: "Time is up!",
-        exportPDF: "Export to PDF",
-        backToResults: "Back to results",
-        mainMenu: "Main menu"
+        correctAnswer: "Correct answer!",
+        incorrectAnswer: "Incorrect answer!"
     }
 };
 
-// Game state
 let currentLanguage = "ru";
 let timerInterval = null;
-let timeLeft = 600;
-let gameMode = "no-timer";
-let currentSubject = "";
+let timeLeft = 600; // 10 минут
+let gameMode = "no-timer"; // по умолчанию
 let currentQuestions = [];
-let userAnswers = [];
 let correctCount = 0;
 let incorrectCount = 0;
-let currentQuestionIndex = 0;
 
-// DOM elements
-const elements = {
-    welcomeContainer: document.querySelector(".welcome-container"),
-    modeSelection: document.querySelector(".mode-selection"),
-    subjectContainer: document.querySelector(".subject-container"),
-    questionContainer: document.querySelector(".question-container"),
-    resultsContainer: document.querySelector(".results-container"),
-    analysisContainer: document.querySelector(".analysis-container"),
-    questionText: document.getElementById("question-text"),
-    questionOptions: document.getElementById("question-options"),
-    resultsStats: document.getElementById("results-stats"),
-    analysisContent: document.getElementById("analysis-content"),
-    timer: document.getElementById("timer"),
-    languageSelect: document.getElementById("language-select"),
-    startButton: document.getElementById("start-button"),
-    continueButton: document.getElementById("continue-button"),
-    recordsButton: document.getElementById("records-button"),
-    timedMode: document.getElementById("timed-mode"),
-    noTimerMode: document.getElementById("no-timer-mode"),
-    historyButton: document.getElementById("history-button"),
-    informaticsButton: document.getElementById("informatics-button"),
-    chemistryButton: document.getElementById("chemistry-button"),
-    analysisBtn: document.getElementById("analysis-btn"),
-    returnMainBtn: document.getElementById("return-main-btn"),
-    backToResultsBtn: document.getElementById("back-to-results-btn"),
-    exportPdfBtn: document.getElementById("export-pdf-btn"),
-    mainMenuBtn: document.getElementById("main-menu-btn"),
-    welcomeTitle: document.getElementById("welcome-title"),
-    welcomeMessage: document.getElementById("welcome-message"),
-    languageLabel: document.getElementById("language-label"),
-    modeTitle: document.getElementById("mode-title"),
-    selectSubjectTitle: document.getElementById("select-subject-title"),
-    resultsTitle: document.getElementById("results-title"),
-    analysisTitle: document.getElementById("analysis-title")
-};
 
-// Utility functions
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -139,41 +70,33 @@ function shuffleArray(array) {
     return array;
 }
 
-function updateUI() {
-    const t = texts[currentLanguage];
-    
-    elements.welcomeTitle.textContent = t.welcomeTitle;
-    elements.welcomeMessage.textContent = t.welcomeMessage;
-    elements.startButton.textContent = t.startButton;
-    elements.continueButton.textContent = t.continueButton;
-    elements.recordsButton.textContent = t.recordsButton;
-    elements.languageLabel.textContent = t.languageLabel;
-    elements.modeTitle.textContent = t.selectMode;
-    elements.timedMode.textContent = t.timedMode;
-    elements.noTimerMode.textContent = t.noTimerMode;
-    elements.selectSubjectTitle.textContent = t.selectSubject;
-    elements.historyButton.textContent = t.history;
-    elements.informaticsButton.textContent = t.informatics;
-    elements.chemistryButton.textContent = t.chemistry;
-    elements.analysisBtn.textContent = t.analysisButton;
-    elements.resultsTitle.textContent = t.resultsTitle;
-    elements.analysisTitle.textContent = t.analysisTitle;
-    elements.exportPdfBtn.textContent = t.exportPDF;
-    elements.backToResultsBtn.textContent = t.backToResults;
-    elements.mainMenuBtn.textContent = t.mainMenu;
-    elements.returnMainBtn.textContent = t.mainMenu;
+function changeLanguage() {
+    currentLanguage = document.getElementById("language-select").value;
+    document.getElementById("welcome-title").textContent = texts[currentLanguage].welcomeTitle;
+    document.getElementById("welcome-message").textContent = texts[currentLanguage].welcomeMessage;
+    document.getElementById("start-button").textContent = texts[currentLanguage].startButton;
+    document.getElementById("continue-button").textContent = texts[currentLanguage].continueButton;
+    document.getElementById("records-button").textContent = texts[currentLanguage].recordsButton;
+    document.getElementById("language-label").textContent = texts[currentLanguage].languageLabel;
+    document.getElementById("mode-title").textContent = texts[currentLanguage].selectMode;
+    document.getElementById("timed-mode").textContent = texts[currentLanguage].timedMode;
+    document.getElementById("no-timer-mode").textContent = texts[currentLanguage].noTimerMode;
+    document.getElementById("select-subject-title").textContent = texts[currentLanguage].selectSubject;
+    document.getElementById("history-button").textContent = texts[currentLanguage].history;
+    document.getElementById("informatics-button").textContent = texts[currentLanguage].informatics;
+    document.getElementById("chemistry-button").textContent = texts[currentLanguage].chemistry;
 }
 
-// Game flow functions
 function startGame() {
-    elements.welcomeContainer.style.display = "none";
-    elements.modeSelection.style.display = "block";
+    document.querySelector(".welcome-container").style.display = "none";
+    document.querySelector(".mode-selection").style.display = "block";
 }
 
 function selectMode(mode) {
     gameMode = mode;
-    elements.modeSelection.style.display = "none";
-    elements.subjectContainer.style.display = "block";
+    document.querySelector(".mode-selection").style.display = "none";
+    document.querySelector(".subject-container").style.display = "block";
+    console.log("Выбран режим: ", mode);
 }
 
 function loadSubjectQuestions(subject, callback) {
@@ -181,30 +104,28 @@ function loadSubjectQuestions(subject, callback) {
     script.src = `${subject}.js`;
     script.onload = () => {
         let selectedQuestions;
-        if (subject === "history") selectedQuestions = historyQuestions;
-        else if (subject === "informatics") selectedQuestions = informaticsQuestions;
-        else if (subject === "chemistry") selectedQuestions = chemistryQuestions;
-
+        if (subject === "history") {
+            selectedQuestions = historyQuestions;
+        } else if (subject === "informatics") {
+            selectedQuestions = informaticsQuestions;
+        } else if (subject === "chemistry") {
+            selectedQuestions = chemistryQuestions;
+        }
         callback(shuffleArray(selectedQuestions));
     };
     document.body.appendChild(script);
 }
 
 function startSubject(subject) {
-    currentSubject = subject;
-    correctCount = 0;
-    incorrectCount = 0;
-    currentQuestionIndex = 0;
-    userAnswers = [];
-    
     loadSubjectQuestions(subject, (selectedQuestions) => {
         currentQuestions = selectedQuestions;
-        elements.subjectContainer.style.display = "none";
-        elements.questionContainer.style.display = "block";
+        document.querySelector(".subject-container").style.display = "none";
+        document.querySelector(".question-container").style.display = "block";
 
         if (gameMode === "timer") {
             timeLeft = 600;
-            elements.timer.style.display = "block";
+            const timerDisplay = document.getElementById("timer");
+            timerDisplay.style.display = "block";
             updateTimerDisplay();
             timerInterval = setInterval(() => {
                 timeLeft--;
@@ -215,48 +136,41 @@ function startSubject(subject) {
                 }
             }, 1000);
         } else {
-            elements.timer.style.display = "none";
+            document.getElementById("timer").style.display = "none";
         }
 
-        displayQuestion();
+        displayQuestion(currentQuestions, 0);
     });
 }
 
-function displayQuestion() {
-    if (currentQuestionIndex < currentQuestions.length) {
-        const question = currentQuestions[currentQuestionIndex];
-        elements.questionText.textContent = question.text[currentLanguage];
-        elements.questionOptions.innerHTML = "";
+function displayQuestion(questionsArray, index) {
+    if (index < questionsArray.length) {
+        const question = questionsArray[index];
+        const questionElement = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("question-options");
+
+        questionElement.textContent = question.text[currentLanguage];
+        optionsContainer.innerHTML = "";
 
         const shuffledOptions = shuffleArray([...question.options]);
 
         shuffledOptions.forEach(option => {
-            const button = document.createElement("button");
-            button.textContent = option.text[currentLanguage];
-            button.onclick = () => checkAnswer(option);
-            elements.questionOptions.appendChild(button);
+            const optionButton = document.createElement("button");
+            optionButton.textContent = option.text[currentLanguage];
+            optionButton.onclick = () => checkAnswer(option, questionsArray, index);
+            optionsContainer.appendChild(optionButton);
         });
     } else {
-        showFinalResults();
+        document.getElementById("question-container").innerHTML = "<p>Все вопросы завершены!</p>";
     }
 }
 
-function checkAnswer(selectedOption) {
-    const buttons = elements.questionOptions.querySelectorAll("button");
-    const currentQuestion = currentQuestions[currentQuestionIndex];
-
-    userAnswers.push({
-        question: currentQuestion,
-        selected: selectedOption,
-        correct: selectedOption.correct
-    });
+function checkAnswer(selectedOption, questionsArray, currentIndex) {
+    const buttons = document.querySelectorAll("#question-options button");
 
     buttons.forEach(btn => {
         btn.disabled = true;
-        const optionText = btn.textContent;
-        const isCorrect = currentQuestion.options.find(
-            opt => opt.text[currentLanguage] === optionText
-        )?.correct;
+        const isCorrect = questionsArray[currentIndex].options.find(opt => opt.text[currentLanguage] === btn.textContent)?.correct;
 
         if (isCorrect) {
             btn.classList.add("highlight-correct");
@@ -267,6 +181,7 @@ function checkAnswer(selectedOption) {
         }
     });
 
+    // Обновим счетчики
     if (selectedOption.correct) {
         correctCount++;
     } else {
@@ -274,190 +189,52 @@ function checkAnswer(selectedOption) {
     }
 
     setTimeout(() => {
-        currentQuestionIndex++;
-        displayQuestion();
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < questionsArray.length) {
+            displayQuestion(questionsArray, nextIndex);
+        } else {
+            showFinalResults();
+        }
     }, 1500);
 }
 
 function updateTimerDisplay() {
+    const timerDisplay = document.getElementById("timer");
     const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
     const seconds = (timeLeft % 60).toString().padStart(2, '0');
-    elements.timer.textContent = `${minutes}:${seconds}`;
-    elements.timer.classList.toggle("warning", timeLeft <= 60);
+    timerDisplay.textContent = `${minutes}:${seconds}`;
+
+    if (timeLeft <= 60) {
+        timerDisplay.classList.add("warning");
+    } else {
+        timerDisplay.classList.remove("warning");
+    }
 }
 
 function endGameDueToTimeout() {
-    elements.questionContainer.innerHTML = `
-        <h2>${texts[currentLanguage].timeIsUp}</h2>
-        <button onclick="showFinalResults()">${texts[currentLanguage].analysisButton}</button>
-    `;
+    const container = document.querySelector(".question-container");
+    const message = document.createElement("p");
+    message.style.color = "#b80000";
+    message.style.fontWeight = "bold";
+    message.textContent = {
+        ru: "Время вышло!",
+        uz: "Vaqt tugadi!",
+        en: "Time is up!"
+    }[currentLanguage];
+
+    container.innerHTML = "";
+    container.appendChild(message);
+    document.getElementById("timer").style.display = "none";
 }
 
 function showFinalResults() {
+    const container = document.querySelector(".question-container");
+    container.innerHTML = `
+        <p><strong>${texts[currentLanguage].correctAnswer}</strong>: ${correctCount}</p>
+        <p><strong>${texts[currentLanguage].incorrectAnswer}</strong>: ${incorrectCount}</p>
+        <button onclick="location.reload()">${texts[currentLanguage].startButton}</button>
+    `;
     if (timerInterval) {
         clearInterval(timerInterval);
-        timerInterval = null;
     }
-
-    elements.questionContainer.style.display = "none";
-    elements.resultsContainer.style.display = "block";
-
-    elements.resultsStats.innerHTML = `
-        <p><strong>${texts[currentLanguage].correctAnswer}</strong> ${correctCount}</p>
-        <p><strong>${texts[currentLanguage].incorrectAnswer}</strong> ${incorrectCount}</p>
-        <p><strong>${texts[currentLanguage].totalQuestions}</strong> ${currentQuestions.length}</p>
-        <p><strong>${texts[currentLanguage].correctPercentage}</strong> ${Math.round((correctCount / currentQuestions.length) * 100)}%</p>
-    `;
 }
-
-function showAnalysis() {
-    elements.resultsContainer.style.display = "none";
-    elements.analysisContainer.style.display = "block";
-    elements.analysisContent.innerHTML = "";
-
-    userAnswers.forEach((answer, index) => {
-        const question = answer.question;
-        const isCorrect = answer.selected.correct;
-        const div = document.createElement("div");
-        div.className = "question-analysis";
-
-        // Заголовок вопроса
-        div.innerHTML = `
-            <p><strong>${index + 1}. ${question.text[currentLanguage]}</strong></p>
-            <p class="${isCorrect ? 'correct-answer' : 'user-wrong-answer'}">
-                ${isCorrect ? '✓' : '✗'} ${answer.selected.text[currentLanguage]}
-                ${!isCorrect ? `(${texts[currentLanguage].yourChoice})` : ''}
-            </p>
-        `;
-
-        // Убираем повторяющиеся варианты ответа
-        const uniqueOptions = question.options.reduce((acc, option) => {
-            if (!acc.some(item => item.text[currentLanguage] === option.text[currentLanguage])) {
-                acc.push(option);
-            }
-            return acc;
-        }, []);
-
-        // Добавляем все уникальные варианты ответа
-        const optionsDiv = document.createElement("div");
-        optionsDiv.className = "all-options";
-
-        uniqueOptions.forEach((option) => {
-            const optionP = document.createElement("p");
-            optionP.className = option.correct ? "correct-answer" : "possible-answer";
-            optionP.innerText = `${option.correct ? "✓" : ""} ${option.text[currentLanguage]}`;
-            optionsDiv.appendChild(optionP);
-        });
-
-        div.appendChild(optionsDiv);
-        elements.analysisContent.appendChild(div);
-    });
-}
-
-function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    // Title
-    doc.setFontSize(20);
-    doc.setTextColor(40, 40, 40);
-    doc.text(texts[currentLanguage]?.analysisTitle || "Analysis", 105, 20, { align: 'center' });
-
-    // Summary
-    doc.setFontSize(14);
-    doc.text(`${texts[currentLanguage]?.correctAnswer || "Correct Answers"}: ${correctCount}`, 20, 40);
-    doc.text(`${texts[currentLanguage]?.incorrectAnswer || "Incorrect Answers"}: ${incorrectCount}`, 20, 50);
-    doc.text(`${texts[currentLanguage]?.totalQuestions || "Total Questions"}: ${currentQuestions.length}`, 20, 60);
-    doc.text(`${texts[currentLanguage]?.correctPercentage || "Correct Percentage"}: ${Math.round((correctCount / currentQuestions.length) * 100)}%`, 20, 70);
-
-    // Detailed analysis
-    let y = 90;
-    doc.setFontSize(12);
-
-    userAnswers.forEach((answer, index) => {
-        const question = answer.question;
-        const isCorrect = answer.selected?.correct || false;
-
-        // Question
-        doc.setTextColor(40, 40, 40);
-        doc.setFont(undefined, 'bold');
-        const questionText = question.text[currentLanguage] || "Вопрос отсутствует";
-        doc.text(`${index + 1}. ${questionText}`, 20, y);
-        y += 8;
-
-        // User answer
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(isCorrect ? 46 : 231, isCorrect ? 204 : 76, isCorrect ? 113 : 60);
-        doc.text(`${isCorrect ? '✓' : '✗'} ${answer.selected.text[currentLanguage] || "Нет ответа"} ${!isCorrect ? `(${texts[currentLanguage]?.yourChoice || "Your Choice"})` : ''}`, 25, y);
-        y += 8;
-
-        // Correct answer if wrong
-        if (!isCorrect) {
-            doc.setTextColor(39, 174, 96);
-            const correctOption = question.options?.find(opt => opt.correct) || { text: "Нет верного ответа" };
-            doc.text(`✓ ${correctOption.text[currentLanguage] || "Нет ответа"}`, 25, y);
-            y += 8;
-        }
-
-        y += 10;
-
-        // New page if needed
-        if (y > 270) {
-            doc.addPage();
-            y = 20;
-        }
-    });
-
-    doc.save("quiz_results.pdf");
-}
-
-function returnToMain() {
-    location.reload();
-}
-
-function returnToResults() {
-    elements.analysisContainer.style.display = "none";
-    elements.resultsContainer.style.display = "block";
-}
-
-// Event listeners
-function setupEventListeners() {
-    // Language change
-    elements.languageSelect.addEventListener("change", () => {
-        currentLanguage = elements.languageSelect.value;
-        localStorage.setItem("quizLang", currentLanguage);
-        updateUI();
-    });
-    
-    // Main buttons
-    elements.startButton.addEventListener("click", startGame);
-    
-    // Mode selection
-    elements.timedMode.addEventListener("click", () => selectMode("timer"));
-    elements.noTimerMode.addEventListener("click", () => selectMode("no-timer"));
-    
-    // Subject selection
-    elements.historyButton.addEventListener("click", () => startSubject("history"));
-    elements.informaticsButton.addEventListener("click", () => startSubject("informatics"));
-    elements.chemistryButton.addEventListener("click", () => startSubject("chemistry"));
-    
-    // Results and analysis
-    elements.analysisBtn.addEventListener("click", showAnalysis);
-    elements.returnMainBtn.addEventListener("click", returnToMain);
-    elements.backToResultsBtn.addEventListener("click", returnToResults);
-    elements.exportPdfBtn.addEventListener("click", exportToPDF);
-    elements.mainMenuBtn.addEventListener("click", returnToMain);
-}
-
-// Initialize the game
-window.addEventListener("DOMContentLoaded", () => {
-    // Load saved language
-    const savedLang = localStorage.getItem("quizLang");
-    if (savedLang) {
-        elements.languageSelect.value = savedLang;
-        currentLanguage = savedLang;
-    }
-    
-    updateUI();
-    setupEventListeners();
-});
